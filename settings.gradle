@@ -1,3 +1,4 @@
 rootProject.name = 'kotlin-macros-examples'
 include 'json-from-dataclass'
+include 'hello-world'
 

@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    compile(kotlin("stdlib"))
+    compile(files("../lib/kotlin-stdlib.jar"))
 }
