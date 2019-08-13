@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-    // To include kotlin.meta
-    compile(files("../lib/kotlin-stdlib.jar"))
-    // To use macros
-    testCompile(files("../classes/artifacts/kotlin_macros_examples_hello_world_main_jar/kotlin-macros-examples.hello-world.main.jar"))
+    implementation(files("../lib/kotlin-stdlib.jar")) // To include kotlin.meta
+    testImplementation(files("../macros-jars/kotlin-macros-examples.hello-world.main.jar")) // To use macros
 }
