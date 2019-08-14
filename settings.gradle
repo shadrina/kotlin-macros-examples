@@ -1,4 +1,14 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+
+        mavenCentral()
+
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+}
 rootProject.name = 'kotlin-macros-examples'
 include 'dataclass-from-json'
 include 'hello-world'
+include 'tuples'
 
