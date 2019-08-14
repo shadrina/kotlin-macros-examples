@@ -1,0 +1,16 @@
+{
+  "title": "Hello",
+  "author": {
+    "name": "Alice",
+    "age": 23,
+    "online": false
+  },
+  "date": "01.02.2006",
+  "additional": {
+    "a": true,
+    "b": 123,
+    "c": {
+      "d": "abc"
+    }
+  }
+}
