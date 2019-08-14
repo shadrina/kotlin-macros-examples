@@ -42,13 +42,12 @@ annotation class ConstructFromJson(val json: String) {
         )
     }
 
-    fun Property.toParam(): Param {
-        val variable = vars.single()!!
-        return Param(
+    fun Property.toParam() = with (vars.single()!!) {
+        Param(
             mods = mods,
             readOnly = readOnly,
-            name = variable.name,
-            type = variable.type,
+            name = name,
+            type = type,
             default = expr
         )
     }

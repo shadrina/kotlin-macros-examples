@@ -30,13 +30,12 @@ annotation class CreateTuple(val n: Int) {
         return toList
     }
 
-    fun Property.toParam(): Param {
-        val variable = vars.single()!!
-        return Param(
+    fun Property.toParam() = with (vars.single()!!) {
+        Param(
             mods = mods,
             readOnly = readOnly,
-            name = variable.name,
-            type = variable.type,
+            name = name,
+            type = type,
             default = expr
         )
     }
