@@ -1,6 +1,11 @@
-@macro:HelloWorld
-class A
+import org.junit.jupiter.api.Test
 
-fun main() {
-    A().helloWorld()
+@macro:HelloWorld
+class Example
+
+class Test {
+    @Test
+    fun simple() {
+        Example().helloWorld()
+    }
 }
