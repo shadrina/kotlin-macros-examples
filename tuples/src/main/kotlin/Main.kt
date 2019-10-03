@@ -20,7 +20,7 @@ annotation class CreateTuple(val n: Int) {
 
     fun createParam(i: Int) = qd"val ${"t$i".quote()}: ${"T$i".quote()}".toParam()
     fun createTypeParam(i: Int) = TypeParam(listOf(Lit(Keyword.OUT)), "T$i", null)
-    fun createValueArg(i: Int) = ValueArg(null, false, qe"${"t$i".quote()}")
+    fun createValueArg(i: Int) = ValueArg(null, false, "t$i".quote())
 
     fun createToString(): Decl = qd"""fun toString() = "(" + toList().toString().removeSurrounding("[", "]") + ")" """
     fun createToList(): Decl {
