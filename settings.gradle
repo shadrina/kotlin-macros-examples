@@ -2,4 +2,4 @@ rootProject.name = 'kotlin-macros-examples'
 include 'dataclass-from-json'
 include 'hello-world'
 include 'tuples'
-
+include 'stuff'
