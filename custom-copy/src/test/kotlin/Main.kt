@@ -1,3 +1,5 @@
+import kotlin.meta.quote
+
 @macro:CustomCopy
 open class NeedCopy(val a: String) {
     var b: Int = 1

@@ -1,24 +1,22 @@
 import kotlin.meta.Node
 import kotlin.meta.Node.*
-import kotlin.meta.Node.Expr.This
 import kotlin.meta.Node.Expr.Name
-import kotlin.meta.Node.Expr.BinaryOp
-import kotlin.meta.Node.Expr.BinaryOp.Oper.*
-import kotlin.meta.Node.Expr.BinaryOp.Token.*
 import kotlin.meta.Node.Decl.*
 import kotlin.meta.Node.Decl.Func.*
 
 annotation class CustomCopy {
     operator fun invoke(klass: Structured): Node {
-        val primaryParams = klass.primaryConstructor?.params?.map { toFuncParam(it.name, it.type!!) } ?: listOf()
+        val primaryParams = klass.primaryConstructor?.params
+            ?.map { createFuncParam(it.name, it.type!!) }
+            ?: listOf()
         val propertiesAsParams = klass.members.filterIsInstance<Property>()
             .filter { !it.readOnly && !it.isPrivate() }
             .mapNotNull {
                 val v = it.vars.singleOrNull()
-                if (v?.type == null) null else toFuncParam(v.name, v.type!!)
+                if (v?.type == null) null else createFuncParam(v.name, v.type!!)
             }
 
-        val constructorArgs = primaryParams.map { toValueArg(it.name) }
+        val constructorArgs = primaryParams.map { createValueArg(it.name) }
         val constructorCall = qe"${klass.name}()".copy(args = constructorArgs)
         val resultDecl = qd"val result = $constructorCall".toStmt()
         val setters = propertiesAsParams.map { qe"result.${it.name} = ${it.name}".toStmt() }
@@ -38,18 +36,14 @@ annotation class CustomCopy {
 
     private fun Property.isPrivate() = mods.any { it is Modifier.Lit && it.keyword == Modifier.Keyword.PRIVATE }
 
-    private fun toFuncParam(name: Name, type: Type) = Param(
+    private fun createFuncParam(name: Name, type: Type) = Param(
         mods = listOf(),
         readOnly = null,
         name = name,
         type = type,
-        default = BinaryOp(
-            lhs = This(label = null),
-            oper = Token(token = DOT),
-            rhs = name
-        )
+        default = qe"this.$name"
     )
-    private fun toValueArg(name: Name) = ValueArg(
+    private fun createValueArg(name: Name) = ValueArg(
         name = null,
         asterisk = false,
         expr = name
