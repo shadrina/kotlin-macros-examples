@@ -25,7 +25,7 @@ annotation class CustomCopy {
 
         val copy = qd"fun copy() {}".copy(
             params = primaryParams + propertiesAsParams,
-            type = typeFromName(klass.name),
+            type = klass.name.toType(),
             body = Body.Block(Block(stmts))
         )
         return klass.copy(members = klass.members + copy)
@@ -49,12 +49,12 @@ annotation class CustomCopy {
         expr = name
     )
 
-    private fun typeFromName(name: Name) = Type(
+    private fun Name.toType() = Type(
         mods = listOf(),
         ref = TypeRef.Simple(
             pieces = listOf(
                 TypeRef.Simple.Piece(
-                    name = name,
+                    name = this,
                     typeParams = listOf()
                 )
             )
