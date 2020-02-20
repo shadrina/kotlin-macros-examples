@@ -6,15 +6,14 @@ import kotlin.meta.Node.Decl.*
 import kotlin.meta.Node.Decl.Func.*
 import kotlin.meta.quote
 
-annotation class ConstructFromJson(val json: String) {
-    operator fun invoke(node: Node): Node {
-        node as Structured
+annotation class ConstructFromJson(private val json: String) {
+    operator fun invoke(node: Structured): Node {
         val jsonObject = JsonParser().parse(json).asJsonObject
         val klass = qd"data class ${node.name}()"
         return klass.build(jsonObject)
     }
 
-    fun Structured.build(bodyObject: JsonObject): Structured {
+    private fun Structured.build(bodyObject: JsonObject): Structured {
         val constructor = primaryConstructor ?: return this
         val params = constructor.params.toMutableList()
         val members = members.toMutableList()
@@ -34,7 +33,7 @@ annotation class ConstructFromJson(val json: String) {
                 else -> "Any"
             }
             val property = qd"val ${key.decapitalize().quote()}: ${type.quote()}"
-            params.add(property.toParam())
+            params.add(Param.fromProperty(property)!!)
         }
         return copy(
             primaryConstructor = constructor.copy(params = params),
@@ -42,17 +41,7 @@ annotation class ConstructFromJson(val json: String) {
         )
     }
 
-    fun Property.toParam() = with (vars.single()!!) {
-        Param(
-            mods = mods,
-            readOnly = readOnly,
-            name = name,
-            type = type,
-            default = expr
-        )
-    }
-
-    fun JsonPrimitive.toKotlinType() = when {
+    private fun JsonPrimitive.toKotlinType() = when {
         isString -> "String"
         isNumber -> "Int"
         isBoolean -> "Boolean"

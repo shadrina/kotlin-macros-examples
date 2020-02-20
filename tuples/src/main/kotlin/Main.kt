@@ -17,10 +17,9 @@ annotation class CreateTuple(private val n: Int) {
         )
     }
 
-    private fun createParam(i: Int): Param {
-        val property = qd"val ${"t$i".quote()}: ${"T$i".quote()}"
-        return Param.fromProperty(property)!!
-    }
+    private fun createParam(i: Int) = Param
+        .fromNameAndType("t$i".quote(), Type.fromName("T$i".quote()))
+        .copy(readOnly = true)
     private fun createTypeParam(i: Int) = TypeParam.fromName("T$i".quote()).withModifier(Keyword.OUT)
 
     private fun createToString(): Decl =
