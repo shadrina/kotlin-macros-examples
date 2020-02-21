@@ -5,6 +5,13 @@ import kotlin.meta.Node.Decl.*
 import kotlin.meta.Node.Decl.Func.*
 import kotlin.meta.quote
 
+/*
+ * data class TupleN<out T0, out T1, ...>(val t0: T0, val t1: T1, ...) {
+ *     override fun toString() = "(" + toList().toString().removeSurrounding("[", "]") + ")"
+ *     fun toList() = listOf(t0, t1, ...)
+ * }
+ */
+
 annotation class CreateTuple(private val n: Int) {
     operator fun invoke(node: Structured): Node {
         val klass = qd"data class ${node.name}()"
@@ -20,7 +27,9 @@ annotation class CreateTuple(private val n: Int) {
     private fun createParam(i: Int) = Param
         .fromNameAndType("t$i".quote(), Type.fromName("T$i".quote()))
         .copy(readOnly = true)
-    private fun createTypeParam(i: Int) = TypeParam.fromName("T$i".quote()).withModifier(Keyword.OUT)
+    private fun createTypeParam(i: Int) = TypeParam
+        .fromName("T$i".quote())
+        .withModifier(Keyword.OUT)
 
     private fun createToString(): Decl =
         qd"""override fun toString() = "(" + toList().toString().removeSurrounding("[", "]") + ")" """
